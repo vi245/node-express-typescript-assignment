@@ -123,4 +123,39 @@ async function getUserDetailByEmail(email: string):Promise<void>{
     });
     return;
 }
+// Function to delete user by email
+
+async function deleteUserByEmail(email: string)
+{
+    await fs.readFile(FILE_PATH,"utf-8",(err,data: string|Buffer)=>{
+        if(err){
+            console.log(err);
+            return;
+        }
+       const parsedData=JSON.parse(data as string);
+       const indexToBeSearched: number=parsedData.findIndex((obj: any)=>{
+         return obj.email===email;
+       })
+       if(indexToBeSearched===-1)
+       {
+        console.log("email not exist");
+       }
+       else{ 
+       console.log(parsedData.splice(indexToBeSearched,1));
+       console.log(JSON.stringify(parsedData));
+       fs.writeFile(FILE_PATH,JSON.stringify(parsedData),(err)=>{
+        if(err)
+        {
+            console.log(err);
+            return;
+        }
+        else{
+            console.log("User deleted  successfully");
+            return;
+        }
+    })
+} 
+    });
+    return; 
+}
 
