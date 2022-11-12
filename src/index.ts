@@ -87,3 +87,40 @@ async function createNewUser(newUser: User):Promise<void>{
        }
      })
 }
+
+//Function to get all user details
+
+async function getAllUserDetails():Promise<void>{
+    await fs.readFile(FILE_PATH,"utf-8",(err,data:string|Buffer)=>{
+        if(err){
+            console.log(err);
+            return;
+        }
+       const parsedData=JSON.parse(data as string);
+      console.log(parsedData);
+    });
+    return;
+}
+//Function to get user detail by email
+
+async function getUserDetailByEmail(email: string):Promise<void>{
+    await fs.readFile(FILE_PATH,"utf-8",(err,data: string| Buffer)=>{
+        if(err){
+            console.log(err);
+            return;
+        }
+       const parsedData=JSON.parse(data as string);
+       const indexToBeSearched: number=parsedData.findIndex((obj: any)=>{
+         return obj.email===email;
+       })
+       if(indexToBeSearched===-1)
+       {
+        console.log("email not exist");
+       }
+       else{
+        console.log(parsedData[indexToBeSearched]);
+       }       
+    });
+    return;
+}
+
