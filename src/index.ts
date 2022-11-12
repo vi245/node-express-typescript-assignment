@@ -158,4 +158,73 @@ async function deleteUserByEmail(email: string)
     });
     return; 
 }
-
+//Function to update user
+async function updateUserByEmail(email: string, name?: string, Gender?: Gender,age?: number):Promise<void>{
+    await fs.readFile(FILE_PATH,"utf-8",(err,data: string|Buffer)=>{
+        if(err){
+            console.log(err);
+            return;
+        }
+        const parsedData=JSON.parse(data as string);
+        const indexToBeSearched: number=parsedData.findIndex((obj: any)=>{
+          return obj.email===email;
+       })
+       if(indexToBeSearched===-1)
+       {
+        console.log("email not exist");
+       }
+       else
+       {
+        if(name)
+        {
+            parsedData[indexToBeSearched].name=name;
+        }
+        if(age)
+        {
+            parsedData[indexToBeSearched].age=age;
+        }
+        if(Gender)
+        {
+            parsedData[indexToBeSearched].Gender=Gender;
+        }
+        console.log(parsedData);
+        fs.writeFile(FILE_PATH, JSON.stringify(parsedData),(err)=>{
+            if(err)
+            {
+                console.log(err);
+                return;
+            }
+            else{
+                console.log("User Updated  successfully");
+                return;
+            }
+           })
+       }
+    })
+    return;
+}
+// MAIN Function 
+async function main()
+{
+    const isFileExist=await checkFileExist(FILE_PATH);
+    if(isFileExist)
+    {
+        const newUser: User={
+            name:"john",
+            age:23,
+            email:"abc3@gmail.com",
+            Gender:Gender.FEMALE, 
+        }
+        const emailToBeSearched: string="abc3@gmail.com";
+       await createNewUser(newUser);
+       await getAllUserDetails();
+       await getUserDetailByEmail(emailToBeSearched);
+       await deleteUserByEmail("abc4@gmail.com");
+       await  updateUserByEmail(emailToBeSearched,"john marshal",Gender.MALE,26);
+        
+    }
+    else{
+     fillInitialDataIfFileNotExist();
+    }
+}
+main();
